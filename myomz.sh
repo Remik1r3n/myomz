@@ -108,7 +108,7 @@ echo "Now patching zshrc file.."
 
 sed -i "s#\$HOME/.oh-my-zsh#\"/usr/share/oh-my-zsh\"#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
 sed -i "s#robbyrussell#gentoo#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
-sed -i "s#plugins=(git)#plugins=(git extract sudo cp pip z wd zsh_reload zsh-syntax-highlighting zsh-autosuggestions adb docker)#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+sed -i "s#plugins=(git)#plugins=(git extract sudo cp pip z wd zsh-syntax-highlighting zsh-autosuggestions adb docker)#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
 
 echo "Now installing zsh-syntax-highlighting."
 

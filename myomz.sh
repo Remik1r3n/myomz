@@ -65,7 +65,7 @@ fi
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     $DOWNLOAD_CMD https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    $DOWNLOAD_CMD https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh
+    $DOWNLOAD_CMD https://raw.fastgit.xyz/ohmyzsh/ohmyzsh/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     $DOWNLOAD_CMD https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "o" -o "$MIRRORANSWER" = "O" ]; then
@@ -83,7 +83,7 @@ echo "----- RUNNING OH-MY-ZSH INSTALL SCRIPT -----"
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} ./install.sh
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://hub.fastgit.org/${REPO}.git} ./install.sh
+    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://hub.fastgit.xyz/${REPO}.git} ./install.sh
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-mirrors/oh-my-zsh} REMOTE=${REMOTE:-https://gitee.com/${REPO}.git} ./install.sh
 elif [ "$MIRRORANSWER" = "o" -o "$MIRRORANSWER" = "O" ]; then
@@ -115,7 +115,7 @@ echo "Now installing zsh-syntax-highlighting."
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    git clone https://hub.fastgit.org/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
+    git clone https://hub.fastgit.xyz/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     git clone https://gitee.com/mirror-github/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
 fi
@@ -125,7 +125,7 @@ echo "Now installing zsh-autosuggestions."
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    git clone https://hub.fastgit.org/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
+    git clone https://hub.fastgit.xyz/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     git clone https://gitee.com/mirror-github/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
 fi

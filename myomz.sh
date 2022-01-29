@@ -65,7 +65,7 @@ fi
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     $DOWNLOAD_CMD https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    $DOWNLOAD_CMD https://raw.fastgit.xyz/ohmyzsh/ohmyzsh/master/tools/install.sh
+    $DOWNLOAD_CMD https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     $DOWNLOAD_CMD https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "o" -o "$MIRRORANSWER" = "O" ]; then

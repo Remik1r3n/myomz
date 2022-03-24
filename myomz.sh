@@ -106,10 +106,18 @@ rm ~/.zshrc
 
 echo "Now patching zshrc file.."
 
-sed -i "s#\$HOME/.oh-my-zsh#\"/usr/share/oh-my-zsh\"#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
-sed -i "s#robbyrussell#gentoo#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
-sed -i "s#plugins=(git)#plugins=(git extract sudo cp pip z wd zsh-syntax-highlighting zsh-autosuggestions adb docker)#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+if [ "$(uname)" == "Darwin" ]; then
+    echo "macOS Detected. Using Experimental macOS support mode. "
+    echo "Note that macOS is not fully supported and YOU MAY RAN INTO PROBLEM."
+    sed -i '' "s#\$HOME/.oh-my-zsh#\"/usr/share/oh-my-zsh\"#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+    sed -i '' "s#robbyrussell#gentoo#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+    sed -i '' "s#plugins=(git)#plugins=(git extract sudo cp pip z wd zsh-syntax-highlighting zsh-autosuggestions adb docker)#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
 
+else
+    sed -i "s#\$HOME/.oh-my-zsh#\"/usr/share/oh-my-zsh\"#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+    sed -i "s#robbyrussell#gentoo#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+    sed -i "s#plugins=(git)#plugins=(git extract sudo cp pip z wd zsh-syntax-highlighting zsh-autosuggestions adb docker)#g"  /usr/share/oh-my-zsh/templates/zshrc.zsh-template
+fi
 echo "Now installing zsh-syntax-highlighting."
 
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then

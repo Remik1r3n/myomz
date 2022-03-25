@@ -50,7 +50,7 @@ fi
 if [ "$(uname)" != "Darwin" ]; then
     echo "You're not using macOS, please use mainline script, not this macOS version!!"
     exit 1
-}
+fi
 
 self_check
 echo "You're Using Experimental macOS support mode. "

@@ -43,9 +43,8 @@ if [ -d "$HOME/oh-my-zsh" ]; then
 #    fi
 fi
 
-if [ `whoami` != "root" ];then
-	echo "FATAL: Use root user."
-	exit 1
+if [ `whoami` == "root" ];then
+	echo "WARNING: Root user. root user is not recommended in macOS"
 fi
 
 if [ "$(uname)" != "Darwin" ]; then

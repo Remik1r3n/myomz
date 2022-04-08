@@ -49,11 +49,12 @@ fi
 }
 self_check
 
-read -p "What mirror do you want to use? G=GitHub F=FastGit E=Gitee > " MIRRORANSWER
-#if [ "$MIRRORANSWER" != "F" -o "$MIRRORANSWER" != "f" -o "$MIRRORANSWER" != "g" -o "$MIRRORANSWER" != "G" -o "$MIRRORANSWER" != "E" -o "$MIRRORANSWER" != "e" ]; then
-#    echo "FATAL: Selection invaild."
-#    exit 1
-#fi
+echo "Welcome to MyOMZ!"
+echo "What mirror do you want to use?"
+echo "G. GitHub. Best compatibility. Recommended if you're not in China Mainland."
+echo "F. FastGit. Recommended if you're in China Mainland."
+echo "E. Gitee. Slower sync. Not recommended. Only use it if FastGit is unusable,"
+read -p "Which? > " MIRRORANSWER
 
 echo "Now downloading install script.."
 if [ $USED_DOWNLOADER = curl ]; then

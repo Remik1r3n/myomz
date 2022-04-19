@@ -3,6 +3,10 @@
 # Apache-2.0 License
 # GitHub URL: https://github.com/Lapis-Apple/myomz/
 # by Lapis Apple. Twitter @dLapisApple
+
+ZSH_INSTALL_USE='ZSH=${ZSH:-/usr/share/oh-my-zsh}'
+GIT_CLONE_PATH_PREFIX_USE='/usr/share/oh-my-zsh'
+
 command_exists() {
         command -v "$@" >/dev/null 2>&1
 }
@@ -17,8 +21,8 @@ if ! command_exists wget; then
         echo "FATAL: wget or curl is not installed. Please install one or both of it(wget recommended)."
         exit 1
     else
-        echo "WARNING: wget is not installed, falling back to curl. this may cause error."
-        echo "It is strongly recommended you press Ctrl+C now and install wget, then run thi script again."
+        echo "WARNING: wget is not installed, falling back to curl. this may cause error!!"
+        echo "It is strongly recommended you press Ctrl+C now, install wget, then run this script again."
         echo "Waiting for 10s.."
         sleep 10s
         USED_DOWNLOADER='curl'
@@ -50,10 +54,10 @@ fi
 self_check
 
 echo "Welcome to MyOMZ!"
-echo "What mirror do you want to use?"
+echo "Which mirror do you want to use?"
 echo "G. GitHub. Best compatibility. Recommended if you're not in China Mainland."
 echo "F. FastGit. Recommended if you're in China Mainland."
-echo "E. Gitee. Slower sync. Not recommended. Only use it if FastGit is unusable,"
+echo "E. Gitee. Slower sync. Not recommended. Only use it if FastGit is unusable."
 read -p "Which? > " MIRRORANSWER
 
 echo "Now downloading install script.."
@@ -82,15 +86,15 @@ chmod +x ./install.sh
 
 echo "----- RUNNING OH-MY-ZSH INSTALL SCRIPT -----"
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} ./install.sh
+    RUNZSH=no ${ZSH_INSTALL_USE} ./install.sh
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://hub.fastgit.xyz/${REPO}.git} ./install.sh
+    RUNZSH=no ${ZSH_INSTALL_USE} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://hub.fastgit.xyz/${REPO}.git} ./install.sh
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-mirrors/oh-my-zsh} REMOTE=${REMOTE:-https://gitee.com/${REPO}.git} ./install.sh
+    RUNZSH=no ${ZSH_INSTALL_USE} REPO=${REPO:-mirrors/oh-my-zsh} REMOTE=${REMOTE:-https://gitee.com/${REPO}.git} ./install.sh
 elif [ "$MIRRORANSWER" = "o" -o "$MIRRORANSWER" = "O" ]; then
     MIRRORANSWER="f"
     echo "Thank you for testing CodeChina Mirror! I'll redirect you to FastGit after this."
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://codechina.csdn.net/mirrors/${REPO}.git} ./install.sh
+    RUNZSH=no ${ZSH_INSTALL_USE} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://codechina.csdn.net/mirrors/${REPO}.git} ./install.sh
 else
     echo "What? How do you get there? Please report this as a bug if you're not developer."
 fi
@@ -122,21 +126,21 @@ fi
 echo "Now installing zsh-syntax-highlighting."
 
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${GIT_CLONE_PATH_PREFIX_USE}/plugins/zsh-syntax-highlighting
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    git clone https://hub.fastgit.xyz/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
+    git clone https://hub.fastgit.xyz/zsh-users/zsh-syntax-highlighting.git ${GIT_CLONE_PATH_PREFIX_USE}/plugins/zsh-syntax-highlighting
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
-    git clone https://gitee.com/mirror-github/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
+    git clone https://gitee.com/mirror-github/zsh-syntax-highlighting.git ${GIT_CLONE_PATH_PREFIX_USE}/plugins/zsh-syntax-highlighting
 fi
 
 echo "Now installing zsh-autosuggestions."
 
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git ${GIT_CLONE_PATH_PREFIX_USE}/plugins/zsh-autosuggestions
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    git clone https://hub.fastgit.xyz/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
+    git clone https://hub.fastgit.xyz/zsh-users/zsh-autosuggestions.git ${GIT_CLONE_PATH_PREFIX_USE}/plugins/zsh-autosuggestions
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
-    git clone https://gitee.com/mirror-github/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
+    git clone https://gitee.com/mirror-github/zsh-autosuggestions.git ${GIT_CLONE_PATH_PREFIX_USE}/plugins/zsh-autosuggestions
 fi
 
 echo "Applying patched zshrc file.."

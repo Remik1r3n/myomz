@@ -52,8 +52,8 @@ self_check
 echo "Welcome to MyOMZ!"
 echo "What mirror do you want to use?"
 echo "G. GitHub. Best compatibility. Recommended if you're not in China Mainland."
-echo "F. FastGit. Recommended if you're in China Mainland."
-echo "E. Gitee. Slower sync. Not recommended. Only use it if FastGit is unusable,"
+echo "F. China Proxy(Based on FastGit and GHProxy). Recommended if you're in China Mainland."
+echo "E. Gitee. Slower sync. Not recommended. Only use it if FastGit is unusable!"
 read -p "Which? > " MIRRORANSWER
 
 echo "Now downloading install script.."
@@ -69,8 +69,6 @@ elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
     $DOWNLOAD_CMD https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     $DOWNLOAD_CMD https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
-elif [ "$MIRRORANSWER" = "o" -o "$MIRRORANSWER" = "O" ]; then
-    $DOWNLOAD_CMD https://codechina.csdn.net/mirrors/ohmyzsh/ohmyzsh/-/raw/master/tools/install.sh
 
 else
     echo "FATAL: Selection invaild. "
@@ -84,13 +82,9 @@ echo "----- RUNNING OH-MY-ZSH INSTALL SCRIPT -----"
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} ./install.sh
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://hub.fastgit.xyz/${REPO}.git} ./install.sh
+    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://ghproxy.com/github.com/${REPO}.git} ./install.sh
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-mirrors/oh-my-zsh} REMOTE=${REMOTE:-https://gitee.com/${REPO}.git} ./install.sh
-elif [ "$MIRRORANSWER" = "o" -o "$MIRRORANSWER" = "O" ]; then
-    MIRRORANSWER="f"
-    echo "Thank you for testing CodeChina Mirror! I'll redirect you to FastGit after this."
-    RUNZSH=no ZSH=${ZSH:-/usr/share/oh-my-zsh} REPO=${REPO:-ohmyzsh/ohmyzsh} REMOTE=${REMOTE:-https://codechina.csdn.net/mirrors/${REPO}.git} ./install.sh
 else
     echo "What? How do you get there? Please report this as a bug if you're not developer."
 fi
@@ -124,7 +118,7 @@ echo "Now installing zsh-syntax-highlighting."
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    git clone https://hub.fastgit.xyz/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
+    git clone https://ghproxy.com/github.com/zsh-users/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     git clone https://gitee.com/mirror-github/zsh-syntax-highlighting.git /usr/share/oh-my-zsh/plugins/zsh-syntax-highlighting
 fi
@@ -134,7 +128,7 @@ echo "Now installing zsh-autosuggestions."
 if [ "$MIRRORANSWER" = "G" -o "$MIRRORANSWER" = "g" ]; then
     git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
 elif [ "$MIRRORANSWER" = "F" -o "$MIRRORANSWER" = "f" ]; then
-    git clone https://hub.fastgit.xyz/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
+    git clone https://ghproxy.com/github.com/zsh-users/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
 elif [ "$MIRRORANSWER" = "e" -o "$MIRRORANSWER" = "E" ]; then
     git clone https://gitee.com/mirror-github/zsh-autosuggestions.git /usr/share/oh-my-zsh/plugins/zsh-autosuggestions
 fi

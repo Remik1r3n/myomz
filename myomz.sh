@@ -18,7 +18,7 @@ if ! command_exists wget; then
         exit 1
     else
         echo "WARNING: wget is not installed, falling back to curl. this may cause error."
-        echo "It is strongly recommended you press Ctrl+C now and install wget, then run thi script again."
+        echo "It is strongly recommended that you press Ctrl+C now, install wget, then run this script again."
         echo "Waiting for 10s.."
         sleep 10s
         USED_DOWNLOADER='curl'
@@ -35,11 +35,6 @@ fi
 if [ -d "/usr/share/oh-my-zsh" ]; then
     echo "FATAL: /usr/share/oh-my-zsh exists! Please delete it before install."
     exit 1
-
-#    read -p "WARNING: Do you want to ignore this error? (y/N)" ANSWER
-#    if [ "$ANSWER" != "Y" -o "$ANSWER" != "y" ]; then
-#        exit 1
-#    fi
 fi
 
 if [ `whoami` != "root" ];then

@@ -7,8 +7,8 @@ Most common Linux distros are supported.
 # How to use
 Download myomz.sh in your way, then execute it as root.
 
-For example, you can directly run this command: `sudo sh -c "$(curl -fsSL https://raw.fastgit.org/Lapis-Apple/myomz/master/myomz.sh)"`
+For example, you can directly run this command: `sudo sh -c "$(curl -fsSL https://raw.fgit.ml/Lapis-Apple/myomz/master/myomz.sh)"`
 
-Or this. `sudo sh -c "$(curl -fsSL https://github.com/Lapis-Apple/myomz/raw/main/myomz.sh)"`
+Or this command, which will download directly from GitHub. `sudo sh -c "$(curl -fsSL https://github.com/Lapis-Apple/myomz/raw/main/myomz.sh)"`
 
-for macOS users, use myomz-macos.sh
+macOS is currently, sadly, **NOT** supported.

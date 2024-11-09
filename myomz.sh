@@ -58,6 +58,12 @@ download_script() {
     elif [ "$USED_DOWNLOADER" = "wget" ]; then
         wget -O "$dest" "$url"
     fi
+
+    if [ ! -f "$dest" ]; then
+        echo "ERROR: Failed to download the install script."
+        echo "Please check your network connection and try again."
+        exit 1
+    fi
 }
 
 install_plugin() {

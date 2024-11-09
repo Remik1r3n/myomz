@@ -84,12 +84,31 @@ install_plugin() {
     git clone "$repo_url" "$dest_dir" || { echo "ERROR: Failed to clone $repo_url"; exit 1; }
 }
 
+patch_zshrc() {
+    local zshrc_template="$1"
+    local install_path="$2"
+
+    # Use different sed syntax for macOS and Linux
+    if is_macos; then
+        sed -i '' "s#\$HOME/.oh-my-zsh#$install_path#g" "$zshrc_template"
+        sed -i '' "s#robbyrussell#gentoo#g" "$zshrc_template"
+        sed -i '' "s#plugins=(git)#plugins=(git extract sudo zsh-syntax-highlighting zsh-autosuggestions)#g" "$zshrc_template"
+    else
+        sed -i "s#\$HOME/.oh-my-zsh#$install_path#g" "$zshrc_template"
+        sed -i "s#robbyrussell#gentoo#g" "$zshrc_template"
+        sed -i "s#plugins=(git)#plugins=(git extract sudo zsh-syntax-highlighting zsh-autosuggestions)#g" "$zshrc_template"
+    fi
+}
+
 main() {
     parse_arguments "$@"
     self_check
 
     if [ "$SINGLE_USER_INSTALL" = true ] || is_macos; then
+        echo "Using single user install! Running in macOS?"
+        echo "!!! Note that You will NOT be able to use oh-my-zsh in other users !!!"
         INSTALL_PATH="$HOME/.oh-my-zsh"
+        
     else
         INSTALL_PATH="/usr/share/oh-my-zsh"
     fi
@@ -98,8 +117,8 @@ main() {
     echo ""
     echo "Pick a mirror:"
     echo "[G] - GitHub -- Best compatibility, but may be slow in China Mainland."
-    echo "[C] - China  -- Use proxy service to accelerate GitHub access in China Mainland."
-    echo "[E] - Gitee -- Alternative for China Mainland."
+    echo "[C] - China  -- Use proxy service to accelerate GitHub access in China Mainland. Unstable."
+    echo "[E] - Gitee -- Alternative for China Mainland. May be outdated."
     read -p "Select > " MIRRORANSWER
 
     echo "Now downloading install script.."
@@ -136,9 +155,7 @@ main() {
     rm -f ~/.zshrc
 
     echo "Now patching zshrc file.."
-    sed -i "s#\$HOME/.oh-my-zsh#$INSTALL_PATH#g" "$INSTALL_PATH/templates/zshrc.zsh-template"
-    sed -i "s#robbyrussell#gentoo#g" "$INSTALL_PATH/templates/zshrc.zsh-template"
-    sed -i "s#plugins=(git)#plugins=(git extract sudo zsh-syntax-highlighting zsh-autosuggestions)#g" "$INSTALL_PATH/templates/zshrc.zsh-template"
+    patch_zshrc "$INSTALL_PATH/templates/zshrc.zsh-template" "$INSTALL_PATH"
 
     echo "Now installing zsh-syntax-highlighting."
     install_plugin "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$INSTALL_PATH/plugins/zsh-syntax-highlighting"

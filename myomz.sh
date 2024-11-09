@@ -1,5 +1,5 @@
 #!/bin/sh
-# MyOMZ! Script.
+# MyOMZ! Script Debugging Version
 # GitHub URL: https://github.com/Remik1r3n/myomz/
 # by Remik1r3n
 
@@ -28,15 +28,22 @@ parse_arguments() {
 }
 
 self_check() {
+    echo "Checking dependencies..."
     if ! command_exists zsh; then
         echo "FATAL: zsh is not installed. Please install it first."
         exit 1
     fi
 
-    if ! command_exists wget && ! command_exists curl; then
-        echo "FATAL: wget or curl is not installed. Please install one or both."
+    if command_exists wget; then
+        USED_DOWNLOADER='wget'
+    elif command_exists curl; then
+        echo "WARNING: wget is not installed, falling back to curl."
+        USED_DOWNLOADER='curl'
+    else
+        echo "FATAL: Neither wget nor curl is installed. Please install one or both."
         exit 1
     fi
+    echo "Downloader set to: $USED_DOWNLOADER"
 
     if ! command_exists git; then
         echo "FATAL: git is not installed. Please install it first."
@@ -52,6 +59,8 @@ self_check() {
 download_script() {
     local url="$1"
     local dest="$2"
+    echo "Attempting to download script from: $url"
+    echo "Using $USED_DOWNLOADER to download..."
 
     if [ "$USED_DOWNLOADER" = "curl" ]; then
         curl -Lo "$dest" "$url"
@@ -60,17 +69,19 @@ download_script() {
     fi
 
     if [ ! -f "$dest" ]; then
-        echo "ERROR: Failed to download the install script."
-        echo "Please check your network connection and try again."
+        echo "ERROR: Download failed. The script could not be saved at $dest."
+        echo "Check network connection or URL accessibility."
         exit 1
     fi
+    echo "Download successful, saved to $dest"
 }
 
 install_plugin() {
     local repo_url="$1"
     local dest_dir="$2"
 
-    git clone "$repo_url" "$dest_dir"
+    echo "Cloning plugin from $repo_url to $dest_dir"
+    git clone "$repo_url" "$dest_dir" || { echo "ERROR: Failed to clone $repo_url"; exit 1; }
 }
 
 main() {

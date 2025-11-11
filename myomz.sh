@@ -81,7 +81,7 @@ install_plugin() {
     local dest_dir="$2"
 
     echo "Cloning plugin from $repo_url to $dest_dir"
-    git clone "$repo_url" "$dest_dir" || { echo "ERROR: Failed to clone $repo_url"; exit 1; }
+    git clone --depth 1 "$repo_url" "$dest_dir" || { echo "ERROR: Failed to clone $repo_url"; exit 1; }
 }
 
 patch_zshrc() {

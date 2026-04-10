@@ -1,5 +1,5 @@
 #!/bin/sh
-# MyOMZ! Script Debugging Version
+# MyOMZ! Script
 # GitHub URL: https://github.com/Remik1r3n/myomz/
 # by Remik1r3n
 
@@ -13,10 +13,14 @@ is_macos() {
 
 parse_arguments() {
     SINGLE_USER_INSTALL=false
+    REMOVE_COMMENTS=false
     while [ $# -gt 0 ]; do
         case "$1" in
             --single-user-install)
                 SINGLE_USER_INSTALL=true
+                ;;
+            --remove-comments)
+                REMOVE_COMMENTS=true
                 ;;
             *)
                 echo "Unknown argument: $1"
@@ -59,17 +63,32 @@ self_check() {
 download_script() {
     local url="$1"
     local dest="$2"
+    local max_retries=3
+    local retry_count=0
+    
     echo "Attempting to download script from: $url"
     echo "Using $USED_DOWNLOADER to download..."
 
-    if [ "$USED_DOWNLOADER" = "curl" ]; then
-        curl -Lo "$dest" "$url"
-    elif [ "$USED_DOWNLOADER" = "wget" ]; then
-        wget -O "$dest" "$url"
-    fi
+    while [ $retry_count -lt $max_retries ]; do
+        if [ "$USED_DOWNLOADER" = "curl" ]; then
+            if curl -fLo "$dest" "$url" 2>/dev/null; then
+                break
+            fi
+        elif [ "$USED_DOWNLOADER" = "wget" ]; then
+            if wget -q -O "$dest" "$url" 2>/dev/null; then
+                break
+            fi
+        fi
+        
+        retry_count=$((retry_count + 1))
+        if [ $retry_count -lt $max_retries ]; then
+            echo "Download failed, retrying... (attempt $((retry_count + 1))/$max_retries)"
+            sleep 2
+        fi
+    done
 
-    if [ ! -f "$dest" ]; then
-        echo "ERROR: Download failed. The script could not be saved at $dest."
+    if [ ! -f "$dest" ] || [ ! -s "$dest" ]; then
+        echo "ERROR: Download failed after $max_retries attempts. The script could not be saved at $dest."
         echo "Check network connection or URL accessibility."
         exit 1
     fi
@@ -79,9 +98,27 @@ download_script() {
 install_plugin() {
     local repo_url="$1"
     local dest_dir="$2"
+    local max_retries=3
+    local retry_count=0
 
     echo "Cloning plugin from $repo_url to $dest_dir"
-    git clone --depth 1 "$repo_url" "$dest_dir" || { echo "ERROR: Failed to clone $repo_url"; exit 1; }
+    
+    while [ $retry_count -lt $max_retries ]; do
+        if git clone --depth 1 "$repo_url" "$dest_dir" 2>/dev/null; then
+            echo "Plugin cloned successfully."
+            return 0
+        fi
+        
+        retry_count=$((retry_count + 1))
+        if [ $retry_count -lt $max_retries ]; then
+            echo "Clone failed, retrying... (attempt $((retry_count + 1))/$max_retries)"
+            rm -rf "$dest_dir"
+            sleep 2
+        fi
+    done
+    
+    echo "ERROR: Failed to clone $repo_url after $max_retries attempts"
+    exit 1
 }
 
 patch_zshrc() {
@@ -100,6 +137,24 @@ patch_zshrc() {
     fi
 }
 
+remove_comments_from_zshrc() {
+    local zshrc_file="$1"
+    local temp_file="${zshrc_file}.tmp"
+    
+    echo "Removing comments from zshrc..."
+    
+    # Remove lines that start with # (comments) but keep shebang and important lines
+    # Also remove empty lines and inline comments
+    if is_macos; then
+        sed -E '/^[[:space:]]*#/d; /^[[:space:]]*$/d' "$zshrc_file" > "$temp_file"
+    else
+        sed -E '/^[[:space:]]*#/d; /^[[:space:]]*$/d' "$zshrc_file" > "$temp_file"
+    fi
+    
+    mv "$temp_file" "$zshrc_file"
+    echo "Comments removed from zshrc."
+}
+
 main() {
     parse_arguments "$@"
     self_check
@@ -113,33 +168,48 @@ main() {
         INSTALL_PATH="/usr/share/oh-my-zsh"
     fi
 
-    echo "MyOMZ Script - by Remi 2021-2024"
+    echo "MyOMZ Script - by Remi 2021-2026"
     echo ""
-    echo "Pick a mirror:"
+    echo "Pick a source:"
     echo "[G] - GitHub -- Best compatibility, but may be slow in China Mainland."
-    echo "[C] - China  -- Use proxy service to accelerate GitHub access in China Mainland. Unstable."
-    echo "[E] - Gitee -- Alternative for China Mainland. May be outdated."
+    echo "[C] - GitHub China Proxy  -- Use proxy service to accelerate GitHub access in China Mainland. Unstable."
+    echo "[P] - Custom GitHub Proxy -- Enter your own GitHub proxy URL prefix."
     read -p "Select > " MIRRORANSWER
 
-    echo "Now downloading install script.."
-
-    rm -f /tmp/omz_install.sh
-
+    GITHUB_PROXY_PREFIX=""
+    
     case "$MIRRORANSWER" in
         G|g)
-            download_script "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" "/tmp/omz_install.sh"
+            GITHUB_PROXY_PREFIX=""
             ;;
         C|c)
-            download_script "https://gh-proxy.com/https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" "/tmp/omz_install.sh"
+            GITHUB_PROXY_PREFIX="https://gh-proxy.com"
             ;;
-        E|e)
-            download_script "https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh" "/tmp/omz_install.sh"
+        P|p)
+            echo ""
+            echo "Enter your custom GitHub proxy URL prefix."
+            echo "Example: https://gh-proxy.com"
+            echo "The script will append the GitHub raw content URL after your prefix."
+            echo "Leave empty to use GitHub directly."
+            read -p "Proxy prefix > " GITHUB_PROXY_PREFIX
+            # Remove trailing slash if present
+            GITHUB_PROXY_PREFIX="${GITHUB_PROXY_PREFIX%/}"
             ;;
         *)
             echo "FATAL: Invalid selection."
             exit 1
             ;;
     esac
+
+    echo "Now downloading install script.."
+
+    rm -f /tmp/omz_install.sh
+
+    OMZ_INSTALL_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+    if [ -n "$GITHUB_PROXY_PREFIX" ]; then
+        OMZ_INSTALL_URL="${GITHUB_PROXY_PREFIX}/${OMZ_INSTALL_URL}"
+    fi
+    download_script "$OMZ_INSTALL_URL" "/tmp/omz_install.sh"
 
     chmod +x /tmp/omz_install.sh
 
@@ -158,13 +228,25 @@ main() {
     patch_zshrc "$INSTALL_PATH/templates/zshrc.zsh-template" "$INSTALL_PATH"
 
     echo "Now installing zsh-syntax-highlighting."
-    install_plugin "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$INSTALL_PATH/plugins/zsh-syntax-highlighting"
+    SYNTAX_HIGHLIGHTING_URL="https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    if [ -n "$GITHUB_PROXY_PREFIX" ]; then
+        SYNTAX_HIGHLIGHTING_URL="${GITHUB_PROXY_PREFIX}/${SYNTAX_HIGHLIGHTING_URL}"
+    fi
+    install_plugin "$SYNTAX_HIGHLIGHTING_URL" "$INSTALL_PATH/plugins/zsh-syntax-highlighting"
 
     echo "Now installing zsh-autosuggestions."
-    install_plugin "https://github.com/zsh-users/zsh-autosuggestions.git" "$INSTALL_PATH/plugins/zsh-autosuggestions"
+    AUTOSUGGESTIONS_URL="https://github.com/zsh-users/zsh-autosuggestions.git"
+    if [ -n "$GITHUB_PROXY_PREFIX" ]; then
+        AUTOSUGGESTIONS_URL="${GITHUB_PROXY_PREFIX}/${AUTOSUGGESTIONS_URL}"
+    fi
+    install_plugin "$AUTOSUGGESTIONS_URL" "$INSTALL_PATH/plugins/zsh-autosuggestions"
 
     echo "Applying patched zshrc file.."
     cp "$INSTALL_PATH/templates/zshrc.zsh-template" ~/.zshrc
+    
+    if [ "$REMOVE_COMMENTS" = true ]; then
+        remove_comments_from_zshrc ~/.zshrc
+    fi
 
     echo ""
     echo "------------------"

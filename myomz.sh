@@ -13,14 +13,15 @@ is_macos() {
 
 parse_arguments() {
     SINGLE_USER_INSTALL=false
-    REMOVE_COMMENTS=false
+    # Default to remove comment
+    REMOVE_COMMENTS=true
     while [ $# -gt 0 ]; do
         case "$1" in
             --single-user-install)
                 SINGLE_USER_INSTALL=true
                 ;;
-            --remove-comments)
-                REMOVE_COMMENTS=true
+            --no-remove-comments)
+                REMOVE_COMMENTS=false
                 ;;
             *)
                 echo "Unknown argument: $1"
